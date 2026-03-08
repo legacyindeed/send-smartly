@@ -105,18 +105,6 @@ export const providers: Provider[] = [
     color: "hsl(210 80% 50%)",
   },
   {
-    id: "paypal-xoom",
-    name: "PayPal Xoom",
-    logo: "🟣",
-    feePercent: 2.0,
-    fxSpreadPercent: 1.8,
-    deliveryMinutes: 60,
-    deliveryLabel: "1 hour",
-    methods: ["Bank transfer", "Cash pickup"],
-    reliabilityScore: 85,
-    color: "hsl(260 60% 50%)",
-  },
-  {
     id: "worldremit",
     name: "WorldRemit",
     logo: "🟢",

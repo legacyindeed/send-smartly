@@ -8,7 +8,7 @@ import CostSavings from "@/components/CostSavings";
 import CorridorInsights from "@/components/CorridorInsights";
 import TransferHistory from "@/components/TransferHistory";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowDown, Zap } from "lucide-react";
+import { ArrowRight, BadgeDollarSign, Sparkles, Zap } from "lucide-react";
 
 export default function Index() {
   const [results, setResults] = useState<TransferResult[] | null>(null);
@@ -25,39 +25,55 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-lg gradient-accent flex items-center justify-center">
+    <div className="page-shell min-h-screen bg-background">
+      <header className="sticky top-0 z-20 border-b border-border/80 bg-background/92 backdrop-blur-sm">
+        <div className="container max-w-6xl mx-auto px-4 py-4 md:py-5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl gradient-accent flex items-center justify-center shadow-accent">
               <Zap className="h-4 w-4 text-accent-foreground" />
             </div>
-            <h1 className="font-heading text-lg font-bold text-foreground">Smart Remittance Optimizer</h1>
+            <div>
+              <p className="section-kicker">Send Smartly</p>
+              <h1 className="font-heading text-[1.05rem] leading-none text-foreground">Remittance Intelligence Desk</h1>
+            </div>
           </div>
-          <p className="text-sm text-muted-foreground hidden sm:block">Find the cheapest way to send money abroad</p>
+          <p className="text-sm text-muted-foreground hidden lg:block">Compare costs, speed, and payout value before you send.</p>
         </div>
       </header>
 
-      <main className="container max-w-6xl mx-auto px-4 py-8 space-y-8">
-        {/* Hero */}
-        <motion.div
+      <main className="container max-w-6xl mx-auto px-4 py-8 md:py-10 space-y-8 md:space-y-10">
+        <motion.section
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center max-w-2xl mx-auto mb-4"
+          className="rounded-3xl gradient-hero text-primary-foreground p-6 md:p-9 shadow-card"
         >
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Send money smarter, not harder
-          </h2>
-          <p className="text-muted-foreground text-lg">
-            Compare 6+ providers instantly. Save on fees and get the best exchange rates.
-          </p>
-        </motion.div>
+          <div className="grid lg:grid-cols-[1.25fr_0.75fr] gap-6 md:gap-8 items-start">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] opacity-70 mb-3">Transfer Planning</p>
+              <h2 className="font-heading text-3xl md:text-4xl leading-[1.04] mb-4">
+                Decide before you send.
+                <br />
+                Not after the fees hit.
+              </h2>
+              <p className="text-sm md:text-base text-primary-foreground/80 max-w-2xl leading-relaxed">
+                Benchmark provider fees, FX rates, and delivery windows in one workflow so teams and households can pick
+                the option with the best final payout.
+              </p>
+            </div>
 
-        {/* Calculator */}
+            <div className="glass-panel rounded-2xl border border-white/20 p-4 md:p-5 text-foreground shadow-card">
+              <p className="section-kicker mb-2">What This View Solves</p>
+              <ul className="space-y-2.5 text-sm leading-relaxed">
+                <li className="flex items-start gap-2"><Sparkles className="h-4 w-4 mt-0.5 text-accent" />Transparent provider ranking by effective cost.</li>
+                <li className="flex items-start gap-2"><BadgeDollarSign className="h-4 w-4 mt-0.5 text-accent" />Clear visibility into FX margin versus transfer fee.</li>
+                <li className="flex items-start gap-2"><ArrowRight className="h-4 w-4 mt-0.5 text-accent" />Faster routing decisions for frequent corridors.</li>
+              </ul>
+            </div>
+          </div>
+        </motion.section>
+
         <CalculatorForm onCalculate={handleCalculate} />
 
-        {/* Results */}
         <AnimatePresence>
           {results && fromCountry && toCountry && (
             <motion.div
@@ -65,12 +81,11 @@ export default function Index() {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              {/* Savings banner */}
               <CostSavings results={results} fromCountry={fromCountry} toCountry={toCountry} />
 
-              {/* Cards grid */}
               <div>
-                <h3 className="font-heading text-xl font-bold text-foreground mb-4">Provider Results</h3>
+                <p className="section-kicker mb-2">Ranked Results</p>
+                <h3 className="font-heading text-2xl text-foreground mb-5">Provider Scoreboard</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {results.map((r, i) => (
                     <ResultsCard key={r.provider.id} result={r} index={i} fromCountry={fromCountry} toCountry={toCountry} />
@@ -78,26 +93,22 @@ export default function Index() {
                 </div>
               </div>
 
-              {/* Comparison table */}
               <ComparisonTable results={results} fromCountry={fromCountry} toCountry={toCountry} />
 
-              {/* AI Insights */}
               <AIInsightPanel insights={insights} />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Corridor Insights */}
         <CorridorInsights />
 
-        {/* Transfer History */}
         <TransferHistory />
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-12 py-8">
-        <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>Smart Remittance Optimizer — Demo product with simulated data. Not financial advice.</p>
+      <footer className="border-t border-border mt-12 py-8 bg-card/45">
+        <div className="container max-w-6xl mx-auto px-4 text-center text-sm text-muted-foreground space-y-1">
+          <p>Send Smartly - Demo environment with simulated pricing data for product preview.</p>
+          <p>Not financial advice. Validate rates and fees with providers before transacting.</p>
         </div>
       </footer>
     </div>

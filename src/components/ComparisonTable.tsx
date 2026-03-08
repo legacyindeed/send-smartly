@@ -14,22 +14,23 @@ export default function ComparisonTable({ results, fromCountry, toCountry }: Com
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
-      className="rounded-2xl bg-card shadow-card overflow-hidden"
+      className="section-shell overflow-hidden"
     >
       <div className="p-6 border-b border-border">
-        <h3 className="font-heading text-lg font-bold text-foreground">Full Comparison</h3>
+        <p className="section-kicker mb-2">Provider Data</p>
+        <h3 className="font-heading text-xl font-bold text-foreground">Full Comparison</h3>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted/30">
-              <th className="text-left px-6 py-3 font-medium text-muted-foreground">Provider</th>
-              <th className="text-right px-4 py-3 font-medium text-muted-foreground">Fee</th>
-              <th className="text-right px-4 py-3 font-medium text-muted-foreground">Rate</th>
-              <th className="text-right px-4 py-3 font-medium text-muted-foreground">Total Cost</th>
-              <th className="text-right px-4 py-3 font-medium text-muted-foreground">Received</th>
-              <th className="text-right px-4 py-3 font-medium text-muted-foreground">Delivery</th>
-              <th className="text-center px-4 py-3 font-medium text-muted-foreground">Tags</th>
+            <tr className="border-b border-border bg-muted/35">
+              <th className="text-left px-6 py-3 font-medium text-muted-foreground whitespace-nowrap">Provider</th>
+              <th className="text-right px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">Fee</th>
+              <th className="text-right px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">Rate</th>
+              <th className="text-right px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">Total Cost</th>
+              <th className="text-right px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">Received</th>
+              <th className="text-right px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">Delivery</th>
+              <th className="text-center px-4 py-3 font-medium text-muted-foreground whitespace-nowrap">Tags</th>
             </tr>
           </thead>
           <tbody>
@@ -37,15 +38,15 @@ export default function ComparisonTable({ results, fromCountry, toCountry }: Com
               const isRec = r.tags.includes("recommended");
               return (
                 <tr key={r.provider.id} className={`border-b border-border last:border-0 transition-colors ${isRec ? "bg-accent/5" : "hover:bg-muted/20"}`}>
-                  <td className="px-6 py-4 font-medium text-foreground">
+                  <td className="px-6 py-4 font-medium text-foreground whitespace-nowrap">
                     <span className="mr-2">{r.provider.logo}</span>
                     {r.provider.name}
                   </td>
-                  <td className="text-right px-4 py-4 text-foreground">{fromCountry.currencySymbol}{r.fee.toFixed(2)}</td>
-                  <td className="text-right px-4 py-4 text-foreground">{r.fxRate.toFixed(4)}</td>
-                  <td className="text-right px-4 py-4 font-semibold text-foreground">{fromCountry.currencySymbol}{r.totalCost.toFixed(2)}</td>
-                  <td className="text-right px-4 py-4 font-bold text-foreground">{toCountry.currencySymbol}{r.recipientReceives.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                  <td className="text-right px-4 py-4 text-muted-foreground">
+                  <td className="text-right px-4 py-4 text-foreground whitespace-nowrap">{fromCountry.currencySymbol}{r.fee.toFixed(2)}</td>
+                  <td className="text-right px-4 py-4 text-foreground whitespace-nowrap">{r.fxRate.toFixed(4)}</td>
+                  <td className="text-right px-4 py-4 font-semibold text-foreground whitespace-nowrap">{fromCountry.currencySymbol}{r.totalCost.toFixed(2)}</td>
+                  <td className="text-right px-4 py-4 font-bold text-foreground whitespace-nowrap">{toCountry.currencySymbol}{r.recipientReceives.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                  <td className="text-right px-4 py-4 text-muted-foreground whitespace-nowrap">
                     <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" />{r.provider.deliveryLabel}</span>
                   </td>
                   <td className="text-center px-4 py-4">

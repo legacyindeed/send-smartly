@@ -32,11 +32,14 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="rounded-2xl bg-card shadow-card p-6 md:p-8"
+      className="section-shell p-6 md:p-8"
     >
-      <h2 className="font-heading text-xl font-bold text-foreground mb-6">Compare Remittance Providers</h2>
+      <div className="mb-6 md:mb-7">
+        <p className="section-kicker mb-2">Transfer Inputs</p>
+        <h2 className="font-heading text-2xl font-bold text-foreground">Compare Remittance Providers</h2>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 md:space-y-7">
         {/* Country selectors */}
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-end">
           <div>
@@ -44,7 +47,7 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
             <select
               value={fromCode}
               onChange={(e) => setFromCode(e.target.value)}
-              className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
             >
               {countries.map(c => (
                 <option key={c.code} value={c.code}>{c.flag} {c.name} ({c.currency})</option>
@@ -63,7 +66,7 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
             <select
               value={toCode}
               onChange={(e) => setToCode(e.target.value)}
-              className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground font-medium shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
             >
               {countries.map(c => (
                 <option key={c.code} value={c.code}>{c.flag} {c.name} ({c.currency})</option>
@@ -82,7 +85,7 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
               min={1}
-              className="w-full rounded-lg border border-border bg-background pl-10 pr-4 py-3 text-foreground font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-xl border border-border bg-background pl-10 pr-4 py-3 text-foreground font-semibold text-lg shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
         </div>
@@ -90,7 +93,7 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
         {/* Mode selector */}
         <div>
           <label className="text-sm font-medium text-muted-foreground mb-3 block">Optimization preference</label>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {modes.map(m => (
               <button
                 type="button"
@@ -99,7 +102,7 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
                 className={`rounded-xl border-2 p-3 text-center transition-all ${
                   mode === m.value
                     ? "border-accent bg-accent/10 shadow-accent"
-                    : "border-border hover:border-muted-foreground/30"
+                    : "border-border bg-card hover:border-muted-foreground/30"
                 }`}
               >
                 <div className={`flex items-center justify-center gap-1.5 font-heading font-semibold text-sm ${mode === m.value ? "text-accent" : "text-foreground"}`}>
@@ -114,7 +117,7 @@ export default function CalculatorForm({ onCalculate }: CalculatorFormProps) {
 
         <button
           type="submit"
-          className="w-full rounded-xl gradient-accent py-4 text-accent-foreground font-heading font-bold text-lg transition-all hover:shadow-accent hover:scale-[1.01] active:scale-[0.99]"
+          className="w-full rounded-xl gradient-accent py-4 text-accent-foreground font-heading font-bold text-lg transition-all hover:shadow-accent hover:scale-[1.01] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           Compare Providers
         </button>

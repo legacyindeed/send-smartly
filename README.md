@@ -1,73 +1,102 @@
-# Welcome to your Lovable project
+﻿# Smart Remittance Optimizer
 
-## Project info
+Premium remittance comparison experience focused on **United States -> Ghana** for v1.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+This repo includes:
+- A Next.js App Router app (API routes + UI)
+- A standalone `index.html` preview page (opens directly via `file://`)
 
-## How can I edit this code?
+## What it does
 
-There are several ways of editing your application.
+Users enter a send amount and compare providers on:
+- Fee
+- FX rate
+- Net principal used for FX conversion
+- Recipient amount
+- Delivery estimate
 
-**Use Lovable**
+Wise is the anchor quote. Other provider quotes are estimated from Wise using configurable multipliers.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## v1 Scope
 
-Changes made via Lovable will be committed automatically to this repo.
+- Corridor: **US -> GH only**
+- Providers shown:
+  - Wise
+  - WorldRemit
+  - TapTap Send
+  - LemFi
+  - Remitly
+  - Western Union
 
-**Use your preferred IDE**
+## Data model approach
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Wise: real API when available, fallback model otherwise
+- Non-Wise providers: estimated from Wise rate
+- Estimated multiplier config: `src/data/provider-estimates.ts`
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Tech stack
 
-Follow these steps:
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Recharts
+- Zod
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## API routes
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+- `GET /api/fx?base=USD&target=GHS`
+- `POST /api/quote`
 
-# Step 3: Install the necessary dependencies.
-npm i
+Example body:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```json
+{
+  "sendCountry": "US",
+  "receiveCountry": "GH",
+  "sendAmount": 500,
+  "payoutMethod": "mobile_money",
+  "priority": "balanced"
+}
+```
+
+## Environment variables
+
+Copy `.env.example` to `.env`.
+
+- `EXCHANGERATE_API_KEY` (preferred FX source)
+- `OPEN_EXCHANGE_RATES_APP_ID` (optional FX fallback)
+- `WISE_API_TOKEN` (optional Wise real quote)
+- `WISE_PROFILE_ID` (optional Wise real quote)
+- `NEXT_PUBLIC_APP_NAME`
+
+If keys are missing, app still works with graceful fallback behavior.
+
+## Run locally
+
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open: `http://localhost:3000`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Standalone preview
 
-**Use GitHub Codespaces**
+Open `index.html` directly:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```txt
+file:///.../send-smartly/index.html
+```
 
-## What technologies are used for this project?
+## Deploy (Vercel)
 
-This project is built with:
+1. Push to GitHub
+2. Import repo in Vercel
+3. Add env vars
+4. Deploy
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Notes
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- No auth in v1
+- No scraping infra required for v1 app experience
+- Keep provider estimate multipliers updated from observed market snapshots
