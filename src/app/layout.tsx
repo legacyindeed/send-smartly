@@ -8,6 +8,11 @@ const displayFont = Instrument_Serif({ subsets: ["latin"], weight: "400", variab
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME ?? "Smart Remittance Optimizer",
   description: "Premium remittance comparison with real FX baseline and mixed real/simulated provider quotes.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
