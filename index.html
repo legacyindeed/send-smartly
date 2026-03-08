@@ -29,6 +29,7 @@
         font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
         color: var(--ink);
         line-height: 1.45;
+        min-height: 100vh;
         background:
           radial-gradient(circle at 10% 0%, rgba(14, 122, 86, 0.14), transparent 32%),
           radial-gradient(circle at 100% 10%, rgba(186, 143, 61, 0.12), transparent 30%),
@@ -45,7 +46,7 @@
       }
 
       .container {
-        width: min(1460px, 98%);
+        width: min(1460px, calc(100% - 24px));
         margin: 0 auto;
       }
 
@@ -334,6 +335,26 @@
 
       .foot { margin-top: 10px; color: var(--muted); font-size: 0.82rem; }
 
+      .provider-cell {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .provider-logo {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        border-radius: 4px;
+        background: #fff;
+      }
+
+      .provider-link {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
       @media (max-width: 980px) {
         .hero-grid, .workspace { grid-template-columns: 1fr; }
         .control-card { position: static; }
@@ -341,9 +362,63 @@
       }
 
       @media (max-width: 760px) {
-        .hero-grid { padding: 22px; }
-        .card-body { padding: 16px; }
-        .card-title { font-size: 1.7rem; }
+        .topbar-inner { min-height: 62px; }
+        main { padding: 10px 0 14px; }
+        .hero-grid { padding: 14px; gap: 10px; }
+        .card-body { padding: 12px; }
+        .card-title { font-size: 1.32rem; }
+        .card-subtitle { font-size: 0.8rem; }
+        .hero-copy { font-size: 0.78rem; }
+        .hero-card { padding: 9px 10px; }
+        .workspace { gap: 10px; }
+        .results-stack { gap: 10px; }
+      }
+
+      @media (max-width: 700px) {
+        .container { width: calc(100% - 16px); }
+        .top-note { display: none; }
+        .eyebrow { letter-spacing: 0.13em; font-size: 10px; }
+        .hero-title { font-size: 1.25rem; }
+        .metrics-row { grid-template-columns: 1fr; gap: 7px; }
+        .table-wrap { overflow: visible; }
+        table {
+          min-width: 0;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+        thead { display: none; }
+        tbody { display: grid; gap: 8px; }
+        tbody tr {
+          display: block;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          background: #fff;
+          padding: 6px 10px;
+        }
+        tbody tr:first-child { background: #eff8f3; }
+        th, td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 1px dashed #ece8dd;
+          padding: 7px 0;
+          font-size: 0.8rem;
+        }
+        td:last-child { border-bottom: 0; }
+        td::before {
+          content: attr(data-label);
+          color: var(--muted);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          font-size: 0.67rem;
+          font-weight: 700;
+          flex: 0 0 auto;
+        }
+        .provider-logo {
+          width: 16px;
+          height: 16px;
+        }
       }
     </style>
   </head>
@@ -676,18 +751,18 @@
             const providerUrl = providerUrls[r.provider];
             const providerLogo = providerLogos[r.provider];
             const providerName = providerUrl
-              ? `<a href="${providerUrl}" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">${r.provider}</a>`
+              ? `<a href="${providerUrl}" target="_blank" rel="noopener noreferrer" class="provider-link">${r.provider}</a>`
               : r.provider;
             const logoHtml = providerLogo
-              ? `<img src="${providerLogo}" alt="${r.provider} logo" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:8px;border-radius:4px;background:#fff;" />`
+              ? `<img src="${providerLogo}" alt="${r.provider} logo" class="provider-logo" />`
               : "";
             return `<tr>
-              <td><strong>${logoHtml}${providerName}</strong></td>
-              <td>${feeDisplay}</td>
-              <td>${r.rate.toFixed(4)}</td>
-              <td>${symbol(from)}${r.totalCost.toFixed(2)}</td>
-              <td><strong>${r.received.toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong> ${to}</td>
-              <td>${r.delivery}</td>
+              <td data-label="Provider"><strong class="provider-cell">${logoHtml}${providerName}</strong></td>
+              <td data-label="Fee">${feeDisplay}</td>
+              <td data-label="Rate">${r.rate.toFixed(4)}</td>
+              <td data-label="FX Principal">${symbol(from)}${r.totalCost.toFixed(2)}</td>
+              <td data-label="Recipient Receives"><strong>${r.received.toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong> ${to}</td>
+              <td data-label="Delivery">${r.delivery}</td>
             </tr>`;
           })
           .join("");
