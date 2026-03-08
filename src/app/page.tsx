@@ -1,12 +1,5 @@
-﻿import { AppShell } from "@/components/layout/AppShell";
-import { HeroSection } from "@/components/hero/HeroSection";
-import { ComparisonWorkspace } from "@/components/layout/ComparisonWorkspace";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return (
-    <AppShell>
-      <HeroSection />
-      <ComparisonWorkspace />
-    </AppShell>
-  );
+  redirect("/index.html");
 }

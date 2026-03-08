@@ -1,0 +1,794 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Send Smartly</title>
+    <meta name="description" content="Compare remittance providers by cost, payout, and delivery speed." />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+      :root {
+        --bg: #f6f3ee;
+        --paper: #fffdf8;
+        --ink: #1c2b24;
+        --muted: #586a61;
+        --line: #d8d6cc;
+        --accent: #0e7a56;
+        --accent-2: #0b5c41;
+        --radius-xl: 24px;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --shadow-soft: 0 1px 3px rgba(19, 28, 24, 0.08), 0 18px 36px rgba(19, 28, 24, 0.1);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+        color: var(--ink);
+        line-height: 1.45;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 10% 0%, rgba(14, 122, 86, 0.14), transparent 32%),
+          radial-gradient(circle at 100% 10%, rgba(186, 143, 61, 0.12), transparent 30%),
+          var(--bg);
+      }
+
+      .grain {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.06;
+        background-image: radial-gradient(#000 0.5px, transparent 0.5px);
+        background-size: 3px 3px;
+      }
+
+      .container {
+        width: min(1460px, calc(100% - 24px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgba(246, 243, 238, 0.92);
+        backdrop-filter: blur(10px);
+      }
+
+      .topbar-inner {
+        min-height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        color: #dff6ea;
+        font-weight: 700;
+        background: #0f4734;
+        border: 1px solid #1b6a4e;
+        box-shadow: 0 2px 8px rgba(11, 35, 24, 0.18);
+      }
+
+      .eyebrow {
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .brand-title {
+        margin: 2px 0 0;
+        font-size: 1.02rem;
+        font-weight: 800;
+      }
+
+      .top-note {
+        margin: 0;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      main { padding: 14px 0 18px; }
+
+      .hero {
+        position: relative;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        background: linear-gradient(140deg, #0f3326, #175540 60%, #113f2f);
+        color: #edf9f2;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        bottom: -140px;
+        width: 380px;
+        height: 380px;
+        background: radial-gradient(circle, rgba(186, 143, 61, 0.28), transparent 70%);
+      }
+
+      .hero-grid {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 14px;
+        padding: 14px 18px;
+      }
+
+      .hero-title {
+        margin: 0 0 6px;
+        font-family: "Instrument Serif", serif;
+        font-size: clamp(1.45rem, 2.8vw, 2.25rem);
+        line-height: 0.98;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-copy {
+        margin: 0;
+        max-width: 58ch;
+        color: rgba(237, 249, 242, 0.84);
+        font-size: 0.82rem;
+      }
+
+      .hero-card {
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
+        color: var(--ink);
+        padding: 10px 12px;
+      }
+
+      .hero-list { margin: 6px 0 0; padding-left: 16px; }
+      .hero-list li { margin-top: 3px; font-size: 0.8rem; }
+
+      .workspace {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: minmax(310px, 360px) minmax(0, 1fr);
+        gap: 12px;
+      }
+
+      .results-stack { display: grid; gap: 12px; }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background: var(--paper);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .control-card {
+        position: sticky;
+        top: 90px;
+        align-self: start;
+      }
+
+      .card-body { padding: 14px; }
+
+      .card-title {
+        margin: 4px 0 0;
+        font-family: "Instrument Serif", serif;
+        font-size: 1.55rem;
+        line-height: 1;
+      }
+
+      .card-subtitle {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .field-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .field { margin-top: 2px; }
+
+      label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-weight: 700;
+      }
+
+      select, input, button {
+        width: 100%;
+        border-radius: var(--radius-md);
+        font-family: inherit;
+        font-size: 0.95rem;
+      }
+
+      select, input {
+        padding: 12px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        background: #fff;
+        transition: 120ms ease;
+      }
+
+      select:hover, input:hover { border-color: #bfc3b4; }
+
+      select:focus, input:focus, button:focus-visible {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(14, 122, 86, 0.2);
+      }
+
+      .primary-btn {
+        margin-top: 10px;
+        border: 0;
+        padding: 10px 12px;
+        color: #fff;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+        background: linear-gradient(140deg, var(--accent), var(--accent-2));
+        cursor: pointer;
+        transition: transform 120ms ease, filter 120ms ease;
+      }
+
+      .primary-btn:hover { filter: brightness(1.03); transform: translateY(-1px); }
+      .primary-btn:active { transform: translateY(0); }
+
+      .note { margin: 10px 0 0; font-size: 0.85rem; color: var(--muted); }
+      .rate-status { margin: 10px 0 0; font-size: 0.8rem; color: var(--muted); }
+
+      .metrics-row {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .metric {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: #fff;
+        padding: 10px;
+      }
+      .metric-best-real {
+        border-color: #87c6ab;
+        background: #eef9f2;
+      }
+      .metric-best-estimated {
+        border-color: #5bb58b;
+        background: #e5f6ec;
+      }
+
+      .metric-label {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 700;
+      }
+
+      .metric-value {
+        margin: 4px 0 0;
+        font-size: 1.08rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+
+      .metric-hint { margin: 4px 0 0; color: var(--muted); font-size: 0.82rem; }
+
+      .table-wrap { margin-top: 8px; overflow-x: auto; }
+
+      table { width: 100%; min-width: 760px; border-collapse: collapse; }
+
+      th, td {
+        border-bottom: 1px solid #e8e4d8;
+        padding: 8px 7px;
+        text-align: left;
+        font-size: 0.82rem;
+        vertical-align: middle;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      tbody tr:first-child { background: rgba(14, 122, 86, 0.08); }
+
+      .pill {
+        display: inline-flex;
+        margin-left: 8px;
+        border-radius: 999px;
+        padding: 3px 9px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: #0d5a40;
+        background: #e8f6ef;
+        border: 1px solid #b6dccb;
+      }
+
+      .foot { margin-top: 10px; color: var(--muted); font-size: 0.82rem; }
+
+      .provider-cell {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .provider-logo {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        border-radius: 4px;
+        background: #fff;
+      }
+
+      .provider-link {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      @media (max-width: 980px) {
+        .hero-grid, .workspace { grid-template-columns: 1fr; }
+        .control-card { position: static; }
+        .metrics-row { grid-template-columns: 1fr; }
+      }
+
+      @media (max-width: 760px) {
+        .topbar-inner { min-height: 62px; }
+        main { padding: 10px 0 14px; }
+        .hero-grid { padding: 14px; gap: 10px; }
+        .card-body { padding: 12px; }
+        .card-title { font-size: 1.32rem; }
+        .card-subtitle { font-size: 0.8rem; }
+        .hero-copy { font-size: 0.78rem; }
+        .hero-card { padding: 9px 10px; }
+        .workspace { gap: 10px; }
+        .results-stack { gap: 10px; }
+      }
+
+      @media (max-width: 700px) {
+        .container { width: calc(100% - 16px); }
+        .top-note { display: none; }
+        .eyebrow { letter-spacing: 0.13em; font-size: 10px; }
+        .hero-title { font-size: 1.25rem; }
+        .metrics-row { grid-template-columns: 1fr; gap: 7px; }
+        .table-wrap { overflow: visible; }
+        table {
+          min-width: 0;
+          border-collapse: separate;
+          border-spacing: 0;
+        }
+        thead { display: none; }
+        tbody { display: grid; gap: 8px; }
+        tbody tr {
+          display: block;
+          border: 1px solid var(--line);
+          border-radius: 14px;
+          background: #fff;
+          padding: 6px 10px;
+        }
+        tbody tr:first-child { background: #eff8f3; }
+        th, td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 1px dashed #ece8dd;
+          padding: 7px 0;
+          font-size: 0.8rem;
+        }
+        td:last-child { border-bottom: 0; }
+        td::before {
+          content: attr(data-label);
+          color: var(--muted);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          font-size: 0.67rem;
+          font-weight: 700;
+          flex: 0 0 auto;
+        }
+        .provider-logo {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <div class="brand">
+          <div class="brand-mark">S</div>
+          <div>
+            <p class="eyebrow">Send Smartly</p>
+            <p class="brand-title">Remittance Intelligence Desk</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow" style="color: rgba(237, 249, 242, 0.74)">Transfer Planning</p>
+            <h1 class="hero-title">Decide before you send.<br />Not after the fees hit.</h1>
+            <p class="hero-copy">Compare provider fee structure, FX spread, recipient payout, and delivery speed in one high-clarity workflow.</p>
+          </div>
+
+          <aside class="hero-card">
+            <p class="eyebrow">What This View Solves</p>
+            <ul class="hero-list">
+              <li>Transparent ranking by effective payout.</li>
+              <li>Clear fee vs FX margin visibility.</li>
+              <li>Faster corridor-level provider decisions.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <article class="card control-card">
+          <div class="card-body">
+            <p class="eyebrow">Transfer Inputs</p>
+            <h2 class="card-title">Compare Providers</h2>
+            <p class="card-subtitle">Use corridor and amount to benchmark providers instantly.</p>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="from">Sending From</label>
+                <select id="from" disabled>
+                  <option value="USD">United States (USD)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="to">Sending To</label>
+                <select id="to" disabled>
+                  <option value="GHS">Ghana (GHS)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="amount">Amount</label>
+                <input id="amount" type="number" min="1" value="1000" />
+              </div>
+            </div>
+
+            <button id="compareBtn" class="primary-btn" type="button">Compare Providers</button>
+            <p id="insight" class="note">V1 scope: United States to Ghana. Adjust amount and click Compare Providers.</p>
+          </div>
+        </article>
+
+        <div class="results-stack">
+          <article class="card">
+            <div class="card-body">
+              <p class="eyebrow">Quick Summary</p>
+              <h2 class="card-title">Decision Snapshot</h2>
+              <p class="card-subtitle">Key metrics update every time you compare.</p>
+              <div class="metrics-row">
+                <div id="bestMetric" class="metric">
+                  <p class="metric-label">Recommended</p>
+                  <p id="bestProvider" class="metric-value" style="color:#0f5f42;">-</p>
+                  <p id="bestMeta" class="metric-hint">Awaiting comparison</p>
+                </div>
+                <div class="metric">
+                  <p class="metric-label">Top Payout</p>
+                  <p id="topPayout" class="metric-value">-</p>
+                  <p class="metric-hint">Highest receive amount in selected corridor</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-body">
+              <p class="eyebrow">Provider Data</p>
+              <h2 class="card-title">Full Comparison</h2>
+              <p class="card-subtitle">Sorted by recipient payout after fee and FX spread impact.</p>
+              <p id="fxStatus" class="rate-status">FX source: checking live rates...</p>
+
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Provider</th>
+                      <th>Fee</th>
+                      <th>Rate</th>
+                      <th title="Amount used for FX conversion after fees and promo adjustments: sendAmount - appliedFee - promoDiscount.">FX Principal (After Fee)</th>
+                      <th>Recipient Receives</th>
+                      <th>Delivery</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rows"></tbody>
+                </table>
+              </div>
+
+              <div class="foot" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+                <span class="pill" title="These provider quotes are modeled from observed pricing relative to the Wise rate.">Estimated provider quotes</span>
+              </div>
+
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const fallbackRates = {
+        "USD:GHS": 15.2,
+      };
+
+      // Update these multipliers whenever you review new screenshots.
+      // Formula: multiplier = observedProviderRate / wiseRate
+      // Example: 10.7892 / 10.7713 = 1.0016618
+      const estimatedProviderConfig = [
+        // Fee assumptions are estimated from screenshots and should be manually updated as promos change.
+        { name: "WorldRemit", rateMultiplier: 1.0016618, baseFeeUsd: 0, appliedFeeUsd: 0, promoDiscountUsd: 0, promoLabel: "", deliveryEstimate: "Within 1 hour", payoutMethods: ["mobile_money", "bank"], trustScore: 86, sourceType: "estimated" },
+        { name: "TapTap Send", rateMultiplier: 1.0017361, baseFeeUsd: 0, appliedFeeUsd: 0, promoDiscountUsd: 0, promoLabel: "No transfer fees", deliveryEstimate: "In minutes", payoutMethods: ["mobile_money"], trustScore: 84, sourceType: "estimated" },
+        { name: "LemFi", rateMultiplier: 1.0017361, baseFeeUsd: 0, appliedFeeUsd: 0, promoDiscountUsd: 0, promoLabel: "Transfer fees: Zero", deliveryEstimate: "Usually within minutes", payoutMethods: ["wallet", "bank", "mobile_money"], trustScore: 82, sourceType: "estimated" },
+        { name: "Remitly", rateMultiplier: 1.0016618, baseFeeUsd: 0, appliedFeeUsd: 0, promoDiscountUsd: 10, promoLabel: "New customer offer", deliveryEstimate: "Within minutes", payoutMethods: ["mobile_money", "bank", "cash_pickup"], trustScore: 89, sourceType: "estimated" },
+        { name: "Western Union", rateMultiplier: 1.0017361, baseFeeUsd: 0.9, appliedFeeUsd: 0, promoDiscountUsd: 0, promoLabel: "First online transfer fee waived", deliveryEstimate: "In minutes", payoutMethods: ["bank", "cash_pickup", "mobile_money"], trustScore: 87, sourceType: "estimated" },
+      ];
+
+      const providerUrls = {
+        Wise: "https://wise.com/",
+        WorldRemit: "https://www.worldremit.com/",
+        "TapTap Send": "https://www.taptapsend.com/",
+        LemFi: "https://www.lemfi.com/",
+        Remitly: "https://www.remitly.com/",
+        "Western Union": "https://www.westernunion.com/",
+      };
+
+      const providerLogos = {
+        Wise: "Wise.jpg",
+        WorldRemit: "World Remit.png",
+        "TapTap Send": "Tap Tap Send.png",
+        LemFi: "Lemfi.png",
+        Remitly: "Remitly.png",
+        "Western Union": "Western Union.svg",
+      };
+
+      const fromEl = document.getElementById("from");
+      const toEl = document.getElementById("to");
+      const amountEl = document.getElementById("amount");
+      const rowsEl = document.getElementById("rows");
+      const insightEl = document.getElementById("insight");
+      const fxStatusEl = document.getElementById("fxStatus");
+      const bestMetricEl = document.getElementById("bestMetric");
+      const bestProviderEl = document.getElementById("bestProvider");
+      const bestMetaEl = document.getElementById("bestMeta");
+      const topPayoutEl = document.getElementById("topPayout");
+      const rateCache = {};
+      let currentRateMeta = { source: "Fallback table", updatedAt: null };
+      let wiseMeta = { source: "Modeled", updatedAt: null };
+      let renderSeq = 0;
+
+      function symbol(code) {
+        if (code === "USD") return "$";
+        if (code === "GBP") return "£";
+        return "";
+      }
+
+      function computeEstimatedRate(wiseRate, multiplier) {
+        return Math.round(wiseRate * multiplier * 10000) / 10000;
+      }
+
+      function deriveMultiplier(observedRate, wiseRate) {
+        return observedRate / wiseRate;
+      }
+
+      function computeNetTransferAmountUsd(sendAmount, appliedFeeUsd, promoDiscountUsd) {
+        return Math.max(0, sendAmount - appliedFeeUsd - promoDiscountUsd);
+      }
+
+      async function getMidRate(from, to) {
+        if (from === to) {
+          currentRateMeta = { source: "Identity rate", updatedAt: new Date() };
+          return 1;
+        }
+
+        const key = `${from}:${to}`;
+        if (rateCache[key]) return rateCache[key];
+
+        try {
+          const url = `https://api.frankfurter.dev/v1/latest?base=${encodeURIComponent(from)}&symbols=${encodeURIComponent(to)}`;
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const payload = await response.json();
+          const liveRate = Number(payload?.rates?.[to]);
+          if (!Number.isFinite(liveRate) || liveRate <= 0) throw new Error("Invalid rate payload");
+          rateCache[key] = liveRate;
+          currentRateMeta = { source: "Live mid-market (Frankfurter v1)", updatedAt: new Date() };
+          return liveRate;
+        } catch (_err) {
+          const fallback = fallbackRates[key] || 1;
+          rateCache[key] = fallback;
+          currentRateMeta = { source: "Fallback table (offline)", updatedAt: new Date() };
+          return fallback;
+        }
+      }
+
+      function formatMeta(meta) {
+        const t = meta.updatedAt instanceof Date ? meta.updatedAt.toLocaleString() : "n/a";
+        return `Last updated: ${t}`;
+      }
+
+      async function getWiseQuote(from, to, amount) {
+        try {
+          const params = new URLSearchParams({
+            sourceCurrency: from,
+            targetCurrency: to,
+            sendAmount: String(amount),
+            includeWise: "true",
+            providers: "wise",
+          });
+          const url = `https://api.wise.com/v4/comparisons/?${params.toString()}`;
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const payload = await response.json();
+          const providerList = Array.isArray(payload) ? payload : Array.isArray(payload?.providers) ? payload.providers : [];
+          const wiseProvider = providerList.find((p) => String(p?.alias || p?.name || "").toLowerCase().includes("wise"));
+          if (!wiseProvider) throw new Error("Wise provider not found");
+          const quotes = Array.isArray(wiseProvider.quotes) ? wiseProvider.quotes : [];
+          const quote = quotes.find((q) => Number.isFinite(Number(q?.receivedAmount))) || quotes[0];
+          if (!quote) throw new Error("Wise quote missing");
+
+          const fee = Number(quote.fee);
+          const rate = Number(quote.rate);
+          const receivedAmount = Number(quote.receivedAmount);
+          if (!Number.isFinite(fee) || !Number.isFinite(rate) || rate <= 0) throw new Error("Invalid Wise quote");
+
+          wiseMeta = { source: "Wise comparisons API v4", updatedAt: new Date() };
+          return {
+            fee,
+            rate,
+            receivedAmount: Number.isFinite(receivedAmount) ? receivedAmount : null,
+            delivery: String(quote.estimatedDelivery || quote.delivery || "").trim() || null,
+          };
+        } catch (_err) {
+          wiseMeta = { source: "Modeled (Wise API unavailable)", updatedAt: new Date() };
+          return null;
+        }
+      }
+
+      async function render() {
+        const seq = ++renderSeq;
+        const from = fromEl.value;
+        const to = toEl.value;
+        const amount = Math.max(1, Number(amountEl.value || 0));
+        rowsEl.innerHTML = '<tr><td colspan="6">Loading latest rates...</td></tr>';
+        const [mid, wiseQuote] = await Promise.all([getMidRate(from, to), getWiseQuote(from, to, amount)]);
+        if (seq !== renderSeq) return;
+
+        const wiseFee = wiseQuote ? wiseQuote.fee : Math.max(0, 2.9 + amount * 0.0085);
+        const wiseRate = wiseQuote ? wiseQuote.rate : Math.max(0.0001, mid * (1 - 0.0048));
+        const wiseNetPrincipal = computeNetTransferAmountUsd(amount, wiseFee, 0);
+        const wiseReceived = wiseNetPrincipal * wiseRate;
+        const wiseRow = {
+          provider: "Wise",
+          baseFeeUsd: wiseFee,
+          appliedFeeUsd: wiseFee,
+          promoDiscountUsd: 0,
+          promoLabel: "",
+          fee: wiseFee,
+          rate: wiseRate,
+          totalCost: wiseNetPrincipal,
+          received: wiseReceived,
+          delivery: wiseQuote?.delivery || "Within 24 hours",
+          sourceType: "real",
+          fxMarkupVsWise: 0,
+          savingsVsWise: 0,
+        };
+
+        const estimatedRows = estimatedProviderConfig.map((cfg) => {
+          const rate = computeEstimatedRate(wiseRate, cfg.rateMultiplier);
+          const fee = cfg.appliedFeeUsd;
+          const netPrincipal = computeNetTransferAmountUsd(amount, cfg.appliedFeeUsd, cfg.promoDiscountUsd);
+          const received = netPrincipal * rate;
+          const effectiveRate = received / amount;
+          const fxMarkupVsWise = ((rate - wiseRate) / wiseRate) * 100;
+          const savingsVsWise = received - wiseReceived;
+          return {
+            provider: cfg.name,
+            baseFeeUsd: cfg.baseFeeUsd,
+            appliedFeeUsd: cfg.appliedFeeUsd,
+            promoDiscountUsd: cfg.promoDiscountUsd,
+            promoLabel: cfg.promoLabel,
+            fee,
+            rate,
+            totalCost: netPrincipal,
+            received,
+            delivery: cfg.deliveryEstimate,
+            sourceType: "estimated",
+            effectiveRate,
+            fxMarkupVsWise,
+            savingsVsWise,
+          };
+        });
+
+        const results = [wiseRow, ...estimatedRows].sort((a, b) => b.received - a.received);
+
+        const best = results[0];
+        const worst = results[results.length - 1];
+        const savings = Math.max(0, worst.totalCost - best.totalCost);
+
+        rowsEl.innerHTML = results
+          .map((r, index) => {
+            const feeDisplay = r.promoLabel
+              ? `<span title="${r.promoLabel}">~${symbol(from)}${r.appliedFeeUsd.toFixed(2)} (${r.promoLabel})</span>`
+              : `${symbol(from)}${r.appliedFeeUsd.toFixed(2)}`;
+            const providerUrl = providerUrls[r.provider];
+            const providerLogo = providerLogos[r.provider];
+            const providerName = providerUrl
+              ? `<a href="${providerUrl}" target="_blank" rel="noopener noreferrer" class="provider-link">${r.provider}</a>`
+              : r.provider;
+            const logoHtml = providerLogo
+              ? `<img src="${providerLogo}" alt="${r.provider} logo" class="provider-logo" />`
+              : "";
+            return `<tr>
+              <td data-label="Provider"><strong class="provider-cell">${logoHtml}${providerName}</strong></td>
+              <td data-label="Fee">${feeDisplay}</td>
+              <td data-label="Rate">${r.rate.toFixed(4)}</td>
+              <td data-label="FX Principal">${symbol(from)}${r.totalCost.toFixed(2)}</td>
+              <td data-label="Recipient Receives"><strong>${r.received.toLocaleString(undefined, { maximumFractionDigits: 2 })}</strong> ${to}</td>
+              <td data-label="Delivery">${r.delivery}</td>
+            </tr>`;
+          })
+          .join("");
+
+        bestProviderEl.textContent = best.provider;
+        if (bestMetricEl) {
+          bestMetricEl.classList.remove("metric-best-real", "metric-best-estimated");
+          if (best.sourceType === "real") {
+            bestMetricEl.classList.add("metric-best-real");
+            bestProviderEl.style.color = "#0f5f42";
+          } else {
+            bestMetricEl.classList.add("metric-best-estimated");
+            bestProviderEl.style.color = "#12764f";
+          }
+        }
+        bestMetaEl.textContent = `Best payout for ${from} to ${to} at current FX`;
+        topPayoutEl.textContent = `${best.received.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${to}`;
+        insightEl.textContent = `${best.provider} currently ranks highest on payout for ${from} to ${to}. Compare total paid, recipient amount, and delivery speed before sending.`;
+        fxStatusEl.textContent = formatMeta(currentRateMeta);
+      }
+
+      document.getElementById("compareBtn").addEventListener("click", render);
+      fromEl.addEventListener("change", render);
+      toEl.addEventListener("change", render);
+      amountEl.addEventListener("change", render);
+      render();
+    </script>
+  </body>
+</html>
